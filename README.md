@@ -187,6 +187,8 @@ More options: [`.env.example`](./.env.example).
 
 Details: [`.env.example`](./.env.example).
 
+**Topic field:** up to **1000 characters**, validated on the server; subject must be one of the in-app choices. See **[SECURITY.md](./SECURITY.md)** for prompt-injection notes (defense in depth, not a guarantee).
+
 ---
 
 ## Quiz behavior

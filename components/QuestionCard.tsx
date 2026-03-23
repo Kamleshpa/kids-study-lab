@@ -10,15 +10,18 @@ const difficultyStyles: Record<
 > = {
   easy: {
     label: "Easy",
-    className: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    className:
+      "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/50 dark:text-emerald-200 dark:border-emerald-600",
   },
   medium: {
     label: "Medium",
-    className: "bg-amber-100 text-amber-900 border-amber-300",
+    className:
+      "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/45 dark:text-amber-100 dark:border-amber-600",
   },
   hard: {
     label: "Hard",
-    className: "bg-rose-100 text-rose-900 border-rose-300",
+    className:
+      "bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-950/45 dark:text-rose-100 dark:border-rose-600",
   },
 };
 
@@ -52,14 +55,20 @@ export function QuestionCard({ question, answer, onSelect, onCheck }: Props) {
           const isSelected = selectedIndex === i;
           const isCorrect = i === question.correctIndex;
           let box =
-            "border-4 border-white/70 bg-white/90 hover:border-kid-purple/40";
+            "border-4 border-kid-ink/10 bg-kid-surface/90 hover:border-kid-purple/40";
           if (checked) {
-            if (isCorrect) box = "border-4 border-emerald-500 bg-emerald-50";
+            if (isCorrect)
+              box =
+                "border-4 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 dark:border-emerald-400";
             else if (isSelected && !isCorrect)
-              box = "border-4 border-red-400 bg-red-50";
-            else box = "border-4 border-transparent bg-white/50 opacity-70";
+              box =
+                "border-4 border-red-400 bg-red-50 dark:bg-red-950/40 dark:border-red-400";
+            else
+              box =
+                "border-4 border-transparent bg-kid-surface/50 opacity-70 dark:bg-kid-surface/30";
           } else if (isSelected) {
-            box = "border-4 border-kid-purple bg-kid-lavender/60";
+            box =
+              "border-4 border-kid-purple bg-kid-lavender/60 dark:bg-kid-purple/25";
           }
 
           return (
@@ -87,7 +96,7 @@ export function QuestionCard({ question, answer, onSelect, onCheck }: Props) {
             whileTap={{ scale: 0.98 }}
             disabled={selectedIndex === null}
             onClick={onCheck}
-            className="min-h-[48px] w-full rounded-2xl border-4 border-kid-purple/40 bg-white py-3 text-lg font-bold text-kid-purple shadow-sm disabled:opacity-40"
+            className="min-h-[48px] w-full rounded-2xl border-4 border-kid-purple/40 bg-kid-surface py-3 text-lg font-bold text-kid-purple shadow-sm disabled:opacity-40"
           >
             Check answer{" "}
             <span className="font-normal text-kid-ink/70">(optional)</span>
@@ -105,8 +114,8 @@ export function QuestionCard({ question, answer, onSelect, onCheck }: Props) {
           animate={{ opacity: 1, y: 0 }}
           className={`rounded-2xl border-4 p-4 ${
             selectedIndex === question.correctIndex
-              ? "border-emerald-400 bg-emerald-50"
-              : "border-amber-300 bg-amber-50"
+              ? "border-emerald-400 bg-emerald-50 dark:border-emerald-500 dark:bg-emerald-950/40"
+              : "border-amber-300 bg-amber-50 dark:border-amber-600 dark:bg-amber-950/35"
           }`}
         >
           <p className="text-lg font-bold">

@@ -31,7 +31,7 @@ export function ReadyPrompt() {
           type="button"
           whileTap={{ scale: 0.98 }}
           onClick={backToStudy}
-          className="min-h-[52px] flex-1 rounded-2xl border-4 border-kid-purple bg-white py-3 text-lg font-bold text-kid-purple"
+          className="min-h-[52px] flex-1 rounded-2xl border-4 border-kid-purple bg-kid-surface py-3 text-lg font-bold text-kid-purple"
         >
           Let me review
         </motion.button>

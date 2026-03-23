@@ -12,16 +12,25 @@ import { StudyViewer } from "@/components/StudyViewer";
 import { useStudy } from "@/context/StudyContext";
 
 export default function Home() {
-  const { state, submitSetup } = useStudy();
+  const { state, submitSetup, resetApp } = useStudy();
 
   return (
     <main className="min-h-dvh pb-12">
-      <header className="sticky top-0 z-10 border-b border-white/40 bg-white/30 px-4 py-3 backdrop-blur-md">
+      <header className="sticky top-0 z-10 border-b border-kid-ink/10 bg-kid-surface/40 px-4 py-3 backdrop-blur-md">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-2">
           <span className="font-display text-xl font-bold text-kid-purple">
             Kids Study Lab
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {state.phase !== "setup" && (
+              <button
+                type="button"
+                onClick={() => resetApp()}
+                className="rounded-xl border-2 border-kid-ink/25 bg-kid-surface/90 px-3 py-2 text-xs font-semibold text-kid-ink"
+              >
+                New topic
+              </button>
+            )}
             {showByokFields() && (
               <button
                 type="button"
@@ -29,7 +38,7 @@ export default function Home() {
                   clearStoredUserLlm();
                   window.location.reload();
                 }}
-                className="rounded-xl border-2 border-kid-purple/40 bg-white/80 px-3 py-2 text-xs font-semibold text-kid-purple"
+                className="rounded-xl border-2 border-kid-purple/40 bg-kid-surface/80 px-3 py-2 text-xs font-semibold text-kid-purple"
               >
                 Clear API key
               </button>

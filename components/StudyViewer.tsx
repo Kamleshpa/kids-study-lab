@@ -50,7 +50,7 @@ export function StudyViewer() {
     >
       {verification && !verification.approved && verification.note && (
         <div
-          className="mb-4 rounded-2xl border-4 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+          className="mb-4 rounded-2xl border-4 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-100"
           role="status"
         >
           <strong>Heads up:</strong> We couldn&apos;t fully verify this lesson
@@ -60,7 +60,7 @@ export function StudyViewer() {
         </div>
       )}
       {verification?.approved && (
-        <p className="mb-4 text-center text-sm font-medium text-emerald-800">
+        <p className="mb-4 text-center text-sm font-medium text-emerald-800 dark:text-emerald-300">
           Lesson double-checked for accuracy and kid-safety
         </p>
       )}
@@ -93,12 +93,12 @@ export function StudyViewer() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -24 }}
             transition={{ duration: 0.25 }}
-            className="rounded-3xl border-4 border-white/80 bg-white/90 p-6 shadow-xl md:p-8"
+            className="rounded-3xl border-4 border-kid-ink/15 bg-kid-surface/90 p-6 shadow-xl md:p-8"
           >
             <h2 className="font-display text-2xl font-bold text-kid-purple md:text-3xl">
               {page.title}
             </h2>
-            <div className="prose prose-lg mt-4 max-w-none text-kid-ink prose-p:leading-relaxed prose-strong:text-kid-purple">
+            <div className="prose prose-lg mt-4 max-w-none text-kid-ink prose-p:leading-relaxed prose-strong:text-kid-purple dark:prose-invert">
               <ReactMarkdown>{page.content}</ReactMarkdown>
             </div>
           </motion.article>
@@ -110,7 +110,7 @@ export function StudyViewer() {
           type="button"
           onClick={goPrev}
           disabled={studyPageIndex === 0}
-          className="min-h-[48px] min-w-[48px] rounded-2xl bg-white/90 px-6 py-3 font-bold text-kid-ink shadow-md disabled:opacity-40"
+          className="min-h-[48px] min-w-[48px] rounded-2xl bg-kid-surface/90 px-6 py-3 font-bold text-kid-ink shadow-md disabled:opacity-40"
         >
           Back
         </button>

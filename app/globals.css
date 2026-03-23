@@ -2,25 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* RGB triplets for Tailwind: rgb(var(--x) / <alpha>) */
 :root {
-  --kid-purple: #7c3aed;
-  --kid-pink: #ec4899;
-  --kid-mint: #6ee7b7;
-  --kid-teal: #14b8a6;
-  --kid-peach: #fdba74;
-  --kid-lavender: #ede9fe;
-  --kid-ink: #1e1b4b;
-  --bg-start: #fef3c7;
-  --bg-end: #e9d5ff;
+  --color-kid-purple: 124 58 237;
+  --color-kid-pink: 236 72 153;
+  --color-kid-mint: 110 231 183;
+  --color-kid-teal: 20 184 166;
+  --color-kid-peach: 253 186 116;
+  --color-kid-lavender: 237 233 254;
+  --color-kid-ink: 30 27 75;
+  --color-kid-surface: 255 255 255;
+  --grad-a: 254 243 199;
+  --grad-b: 233 213 255;
+  --grad-c: 186 230 253;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-kid-purple: 196 181 253;
+    --color-kid-pink: 251 113 133;
+    --color-kid-mint: 52 211 153;
+    --color-kid-teal: 45 212 191;
+    --color-kid-peach: 251 191 36;
+    --color-kid-lavender: 99 102 241;
+    --color-kid-ink: 226 232 240;
+    --color-kid-surface: 30 41 59;
+    --grad-a: 15 23 42;
+    --grad-b: 49 46 129;
+    --grad-c: 30 58 138;
+  }
+}
+
+html {
+  color-scheme: light dark;
 }
 
 body {
-  color: var(--kid-ink);
+  color: rgb(var(--color-kid-ink));
   background: linear-gradient(
     165deg,
-    var(--bg-start) 0%,
-    var(--bg-end) 45%,
-    #bae6fd 100%
+    rgb(var(--grad-a)) 0%,
+    rgb(var(--grad-b)) 45%,
+    rgb(var(--grad-c)) 100%
   );
   background-attachment: fixed;
   min-height: 100dvh;

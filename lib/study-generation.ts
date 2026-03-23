@@ -3,9 +3,11 @@ import type { LanguageModel } from "ai";
 import { z } from "zod";
 import { getLanguageModel, getVerifierLanguageModel } from "@/lib/llm";
 import {
-  buildGenerationPrompt,
-  buildRegenerationPrompt,
-  buildVerifierPrompt,
+  AUTHOR_SYSTEM_PROMPT,
+  VERIFIER_SYSTEM_PROMPT,
+  buildAuthorUserPrompt,
+  buildRegenerationUserPrompt,
+  buildVerifierUserPrompt,
 } from "@/lib/prompts";
 import type {
   GenerateResponse,
@@ -95,10 +97,10 @@ export async function generateStudyWithVerifier(
   let lastVerdict: z.infer<typeof verifierSchema> | null = null;
 
   for (let cycle = 0; cycle <= MAX_REGENERATION_CYCLES; cycle++) {
-    const prompt =
+    const authorUserPrompt =
       cycle === 0
-        ? buildGenerationPrompt(input)
-        : buildRegenerationPrompt(
+        ? buildAuthorUserPrompt(input)
+        : buildRegenerationUserPrompt(
             input,
             formatVerifierFeedback(lastVerdict!),
             cycle
@@ -106,22 +108,24 @@ export async function generateStudyWithVerifier(
 
     const { object } = await generateObject({
       model: generator,
+      system: AUTHOR_SYSTEM_PROMPT,
       schema,
       schemaName: "KidsStudyContent",
       schemaDescription:
         "Kid-friendly study pages and multiple-choice quiz for elementary learners",
-      prompt,
+      prompt: authorUserPrompt,
     });
 
     lastData = normalizeGeneratedStudy(object);
 
     const { object: verdict } = await generateObject({
       model: verifier,
+      system: VERIFIER_SYSTEM_PROMPT,
       schema: verifierSchema,
       schemaName: "VerifierVerdict",
       schemaDescription:
         "Fact-check, quiz key validation, and child-safety review",
-      prompt: buildVerifierPrompt(input, lastData),
+      prompt: buildVerifierUserPrompt(input, lastData),
     });
 
     lastVerdict = verdict;

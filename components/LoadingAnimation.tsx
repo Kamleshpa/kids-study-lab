@@ -20,8 +20,14 @@ type Props = {
   setup: SetupInput;
 };
 
+function isAbortError(e: unknown): boolean {
+  return (
+    e instanceof DOMException && e.name === "AbortError"
+  );
+}
+
 export function LoadingAnimation({ setup }: Props) {
-  const { loadSuccess, loadError } = useStudy();
+  const { loadSuccess, loadError, resetApp } = useStudy();
   const [msgIndex, setMsgIndex] = useState(0);
 
   useEffect(() => {
@@ -32,6 +38,7 @@ export function LoadingAnimation({ setup }: Props) {
   }, []);
 
   useEffect(() => {
+    const ac = new AbortController();
     let cancelled = false;
     (async () => {
       try {
@@ -52,6 +59,7 @@ export function LoadingAnimation({ setup }: Props) {
           method: "POST",
           headers,
           body: JSON.stringify(setup),
+          signal: ac.signal,
         });
         const data = await res.json();
         if (cancelled) return;
@@ -64,12 +72,14 @@ export function LoadingAnimation({ setup }: Props) {
           questions: data.questions,
           verification: data.verification ?? null,
         });
-      } catch {
-        if (!cancelled) loadError("Could not reach the server. Check your connection.");
+      } catch (e) {
+        if (cancelled || isAbortError(e)) return;
+        loadError("Could not reach the server. Check your connection.");
       }
     })();
     return () => {
       cancelled = true;
+      ac.abort();
     };
   }, [setup, loadSuccess, loadError]);
 
@@ -106,6 +116,13 @@ export function LoadingAnimation({ setup }: Props) {
       >
         {MESSAGES[msgIndex]}
       </motion.p>
+      <button
+        type="button"
+        onClick={() => resetApp()}
+        className="min-h-[48px] rounded-2xl border-4 border-kid-ink/20 bg-kid-surface/90 px-6 py-3 text-base font-bold text-kid-ink shadow-md"
+      >
+        Cancel — new topic
+      </button>
     </div>
   );
 }

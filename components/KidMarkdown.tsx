@@ -14,7 +14,7 @@ type Props = {
 export function KidMarkdown({ children, className = "" }: Props) {
   return (
     <div
-      className={`prose max-w-none text-kid-ink prose-p:my-2 prose-p:leading-relaxed prose-strong:font-bold prose-strong:text-kid-purple prose-ul:my-2 prose-ol:my-2 ${className}`}
+      className={`prose max-w-none text-kid-ink prose-p:my-2 prose-p:leading-relaxed prose-strong:font-bold prose-strong:text-kid-purple prose-ul:my-2 prose-ol:my-2 dark:prose-invert ${className}`}
     >
       <ReactMarkdown>{children}</ReactMarkdown>
     </div>

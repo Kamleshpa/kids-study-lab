@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
 
 const config: Config = {
+  darkMode: "media",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,16 +16,17 @@ const config: Config = {
         display: ["var(--font-nunito)", "system-ui", "sans-serif"],
       },
       colors: {
-        "kid-purple": "#7c3aed",
-        "kid-pink": "#ec4899",
-        "kid-mint": "#6ee7b7",
-        "kid-teal": "#14b8a6",
-        "kid-peach": "#fdba74",
-        "kid-lavender": "#ede9fe",
-        "kid-ink": "#1e1b4b",
+        "kid-purple": "rgb(var(--color-kid-purple) / <alpha-value>)",
+        "kid-pink": "rgb(var(--color-kid-pink) / <alpha-value>)",
+        "kid-mint": "rgb(var(--color-kid-mint) / <alpha-value>)",
+        "kid-teal": "rgb(var(--color-kid-teal) / <alpha-value>)",
+        "kid-peach": "rgb(var(--color-kid-peach) / <alpha-value>)",
+        "kid-lavender": "rgb(var(--color-kid-lavender) / <alpha-value>)",
+        "kid-ink": "rgb(var(--color-kid-ink) / <alpha-value>)",
+        "kid-surface": "rgb(var(--color-kid-surface) / <alpha-value>)",
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
 export default config;

@@ -15,7 +15,7 @@ export function ProgressBar({ value, max, label }: Props) {
       {label && (
         <p className="text-sm font-medium text-kid-ink/80">{label}</p>
       )}
-      <div className="h-4 w-full overflow-hidden rounded-full bg-white/60">
+      <div className="h-4 w-full overflow-hidden rounded-full bg-kid-surface/60">
         <motion.div
           className="h-full rounded-full bg-gradient-to-r from-kid-mint to-kid-teal"
           initial={false}

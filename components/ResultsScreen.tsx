@@ -77,7 +77,7 @@ function ScoreRing({
           cy="60"
           r={r}
           fill="none"
-          stroke="rgba(0,0,0,0.08)"
+          className="stroke-kid-ink/15"
           strokeWidth="12"
         />
         <motion.circle
@@ -148,14 +148,14 @@ export function ResultsScreen() {
         </p>
 
         {unanswered > 0 && (
-          <p className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-center font-medium text-amber-950">
+          <p className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-center font-medium text-amber-950 dark:bg-amber-950/35 dark:text-amber-100">
             You didn&apos;t choose an answer for {unanswered} question
             {unanswered === 1 ? "" : "s"}. They&apos;re listed below as{" "}
             <em>skipped</em>.
           </p>
         )}
 
-        <div className="mt-8 space-y-2 rounded-2xl border-4 border-white/80 bg-white/90 p-4">
+        <div className="mt-8 space-y-2 rounded-2xl border-4 border-kid-ink/15 bg-kid-surface/90 p-4">
           <h3 className="font-bold text-kid-ink">By difficulty</h3>
           {(["easy", "medium", "hard"] as const).map((d) => (
             <div key={d} className="flex justify-between text-kid-ink/90">
@@ -168,7 +168,7 @@ export function ResultsScreen() {
           ))}
         </div>
 
-        <div className="mt-8 rounded-2xl border-4 border-kid-purple/30 bg-white/95 p-4">
+        <div className="mt-8 rounded-2xl border-4 border-kid-purple/30 bg-kid-surface/95 p-4">
           <h3 className="font-display text-xl font-bold text-kid-purple">
             Your answers (every pick counts)
           </h3>
@@ -190,10 +190,11 @@ export function ResultsScreen() {
                 statusClass = "text-kid-ink/60";
               } else if (picked === q.correctIndex) {
                 status = "Correct";
-                statusClass = "text-emerald-700 font-bold";
+                statusClass =
+                  "text-emerald-700 font-bold dark:text-emerald-400";
               } else {
                 status = "Not quite";
-                statusClass = "text-rose-700 font-bold";
+                statusClass = "text-rose-700 font-bold dark:text-rose-400";
               }
 
               return (
@@ -226,7 +227,7 @@ export function ResultsScreen() {
         </div>
 
         {incorrect.length > 0 && (
-          <div className="mt-6 rounded-2xl border-4 border-kid-peach bg-kid-peach/20 p-4">
+          <div className="mt-6 rounded-2xl border-4 border-kid-peach bg-kid-peach/20 p-4 dark:border-kid-peach/50 dark:bg-kid-peach/10">
             <h3 className="font-display text-xl font-bold text-kid-ink">
               Keep practicing
             </h3>
@@ -259,7 +260,7 @@ export function ResultsScreen() {
             type="button"
             whileTap={{ scale: 0.98 }}
             onClick={resetApp}
-            className="min-h-[52px] rounded-2xl border-4 border-kid-purple bg-white py-3 text-lg font-bold text-kid-purple"
+            className="min-h-[52px] rounded-2xl border-4 border-kid-purple bg-kid-surface py-3 text-lg font-bold text-kid-purple"
           >
             Study something new
           </motion.button>

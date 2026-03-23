@@ -93,7 +93,7 @@ export function Quiz() {
         <motion.div
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 rounded-2xl border-4 border-amber-300 bg-amber-50 px-4 py-3 text-center font-semibold text-amber-950"
+          className="mt-4 rounded-2xl border-4 border-amber-300 bg-amber-50 px-4 py-3 text-center font-semibold text-amber-950 dark:border-amber-700 dark:bg-amber-950/35 dark:text-amber-100"
           role="status"
         >
           You still have {noPickCount} question
@@ -111,7 +111,7 @@ export function Quiz() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.22 }}
-            className="rounded-3xl border-4 border-white/80 bg-white/95 p-6 shadow-xl md:p-8"
+            className="rounded-3xl border-4 border-kid-ink/15 bg-kid-surface/95 p-6 shadow-xl md:p-8"
           >
             <QuestionCard
               question={q}
@@ -128,7 +128,7 @@ export function Quiz() {
           type="button"
           onClick={goPrev}
           disabled={quizIndex === 0}
-          className="min-h-[48px] rounded-2xl bg-white/90 px-6 py-3 font-bold shadow-md disabled:opacity-40"
+          className="min-h-[48px] rounded-2xl bg-kid-surface/90 px-6 py-3 font-bold text-kid-ink shadow-md disabled:opacity-40"
         >
           Previous
         </button>

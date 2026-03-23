@@ -15,6 +15,18 @@ So for a **public Vercel demo** where **each visitor pays their own usage**, the
 
 ---
 
+## Prompt injection (free-text topic)
+
+The **topic** box is **untrusted input**. No LLM integration is **fully** immune to prompt injection, but this project adds **defense in depth**:
+
+- **Server validation**: grade, subject allowlist, topic **max length**, and **sanitization** (e.g. stripping delimiter-like markers) in [`lib/lesson-input.ts`](./lib/lesson-input.ts).
+- **Prompt structure**: **system** vs **user** messages; user learning context only inside **explicit delimiters**; instructions tell the model to treat that region as **data**, not commands ([`lib/prompts.ts`](./lib/prompts.ts)).
+- **Verifier** pass for safety/quality (also not a perfect boundary).
+
+**Adults** should still **supervise** young learners and skim generated content. The UI shows a short disclaimer when users focus or fill the topic field.
+
+---
+
 ## How this app handles BYOK
 
 1. **Browser (session storage)**  

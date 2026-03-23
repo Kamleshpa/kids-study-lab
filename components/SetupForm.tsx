@@ -12,6 +12,7 @@ import {
   BYOK_REQUIRED,
   showByokFields,
 } from "@/lib/public-config";
+import { MAX_TOPIC_LENGTH } from "@/lib/lesson-input";
 import type { Grade, SetupInput } from "@/lib/types";
 
 const GRADES: Grade[] = ["K", "1", "2", "3", "4", "5"];
@@ -48,6 +49,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
   const [llmApiKey, setLlmApiKey] = useState("");
   const [useOwnKey, setUseOwnKey] = useState(false);
   const [byokError, setByokError] = useState<string | null>(null);
+  const [topicFocused, setTopicFocused] = useState(false);
 
   useEffect(() => {
     if (!defaultSetup) return;
@@ -114,7 +116,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
 
       {errorMessage && (
         <div
-          className="rounded-2xl border-2 border-red-300 bg-red-50 px-4 py-3 text-center text-red-800"
+          className="rounded-2xl border-2 border-red-300 bg-red-50 px-4 py-3 text-center text-red-800 dark:border-red-700 dark:bg-red-950/40 dark:text-red-200"
           role="alert"
         >
           {errorMessage}
@@ -122,7 +124,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
       )}
 
       {showByokFields() && (
-        <fieldset className="space-y-4 rounded-3xl border-4 border-kid-purple/30 bg-white/80 p-5 shadow-inner">
+        <fieldset className="space-y-4 rounded-3xl border-4 border-kid-purple/30 bg-kid-surface/80 p-5 shadow-inner">
           <legend className="px-2 text-lg font-bold text-kid-purple">
             {BYOK_REQUIRED
               ? "Your API key (not stored on our servers)"
@@ -159,7 +161,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
                   id="llm-provider"
                   value={llmProvider}
                   onChange={(e) => setLlmProvider(e.target.value)}
-                  className="w-full rounded-2xl border-4 border-kid-peach bg-white px-4 py-3 text-lg text-kid-ink"
+                  className="w-full rounded-2xl border-4 border-kid-peach bg-kid-surface px-4 py-3 text-lg text-kid-ink"
                 >
                   {LLM_PROVIDERS.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -182,7 +184,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
                   value={llmApiKey}
                   onChange={(e) => setLlmApiKey(e.target.value)}
                   placeholder="sk-… or your provider secret"
-                  className="w-full rounded-2xl border-4 border-kid-peach bg-white px-4 py-3 font-mono text-sm text-kid-ink placeholder:text-kid-ink/35 focus:border-kid-purple focus:outline-none"
+                  className="w-full rounded-2xl border-4 border-kid-peach bg-kid-surface px-4 py-3 font-mono text-sm text-kid-ink placeholder:text-kid-ink/35 focus:border-kid-purple focus:outline-none"
                 />
               </div>
               {byokError && (
@@ -208,7 +210,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
               className={`min-h-[48px] min-w-[48px] rounded-2xl border-4 px-4 py-2 text-lg font-bold transition ${
                 grade === g
                   ? "border-kid-purple bg-kid-lavender text-kid-purple scale-105"
-                  : "border-transparent bg-white/80 text-kid-ink shadow-md"
+                  : "border-transparent bg-kid-surface/80 text-kid-ink shadow-md"
               }`}
             >
               {g === "K" ? "K" : g}
@@ -230,7 +232,7 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
               className={`flex min-h-[52px] flex-col items-center justify-center rounded-2xl border-4 px-2 py-3 text-sm font-semibold transition sm:text-base ${
                 subject === s.id
                   ? "border-kid-mint bg-kid-mint/40 text-kid-ink scale-[1.02]"
-                  : "border-transparent bg-white/90 text-kid-ink shadow-md"
+                  : "border-transparent bg-kid-surface/90 text-kid-ink shadow-md"
               }`}
             >
               <span className="text-2xl" aria-hidden>
@@ -253,11 +255,32 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
           id="topic"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
+          onFocus={() => setTopicFocused(true)}
+          onBlur={() => setTopicFocused(false)}
+          maxLength={MAX_TOPIC_LENGTH}
           rows={3}
           placeholder="e.g. How plants grow, adding numbers to 20, the solar system..."
-          className="w-full rounded-2xl border-4 border-kid-peach bg-white px-4 py-3 text-lg text-kid-ink placeholder:text-kid-ink/40 focus:border-kid-purple focus:outline-none"
+          className="w-full rounded-2xl border-4 border-kid-peach bg-kid-surface px-4 py-3 text-lg text-kid-ink placeholder:text-kid-ink/40 focus:border-kid-purple focus:outline-none"
           required
+          aria-describedby="topic-disclaimer"
         />
+        {(topicFocused || topic.length > 0) && (
+          <p
+            id="topic-disclaimer"
+            className="mt-2 rounded-xl border border-kid-ink/15 bg-kid-surface/60 px-3 py-2 text-sm leading-snug text-kid-ink/80"
+            role="note"
+          >
+            <strong>For grown-ups:</strong> Write a normal learning topic only.
+            This field is not prompt-injection safe—clever text can try to steer
+            the AI. We use limits and safeguards, but{" "}
+            <strong>review lessons with young kids</strong> and see{" "}
+            <code className="rounded bg-kid-ink/10 px-1 text-xs">SECURITY.md</code>{" "}
+            in the repo.
+          </p>
+        )}
+        <p className="mt-1 text-right text-xs text-kid-ink/50">
+          {topic.length}/{MAX_TOPIC_LENGTH}
+        </p>
       </div>
 
       <div>
