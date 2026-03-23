@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --kid-purple: #7c3aed;
+  --kid-pink: #ec4899;
+  --kid-mint: #6ee7b7;
+  --kid-teal: #14b8a6;
+  --kid-peach: #fdba74;
+  --kid-lavender: #ede9fe;
+  --kid-ink: #1e1b4b;
+  --bg-start: #fef3c7;
+  --bg-end: #e9d5ff;
+}
+
+body {
+  color: var(--kid-ink);
+  background: linear-gradient(
+    165deg,
+    var(--bg-start) 0%,
+    var(--bg-end) 45%,
+    #bae6fd 100%
+  );
+  background-attachment: fixed;
+  min-height: 100dvh;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
