@@ -1,4 +1,5 @@
 import { generateStudyWithVerifier } from "@/lib/study-generation";
+import { resolveModelsFromRequest } from "@/lib/resolve-request-models";
 import type { SetupInput } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -37,7 +38,12 @@ export async function POST(req: Request) {
       questionCount,
     };
 
-    const { data, verification } = await generateStudyWithVerifier(input);
+    const { generator, verifier } = resolveModelsFromRequest(req);
+
+    const { data, verification } = await generateStudyWithVerifier(input, {
+      generator,
+      verifier,
+    });
 
     return Response.json({
       studyPages: data.studyPages,
@@ -47,7 +53,11 @@ export async function POST(req: Request) {
   } catch (e) {
     const message =
       e instanceof Error ? e.message : "Failed to generate content.";
-    console.error("[api/generate]", e);
-    return Response.json({ error: message }, { status: 500 });
+    const status = message.includes("This deployment uses your own API key")
+      ? 401
+      : 500;
+    // Never log request headers (may contain user API keys)
+    console.error("[api/generate]", message);
+    return Response.json({ error: message }, { status });
   }
 }

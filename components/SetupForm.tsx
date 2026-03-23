@@ -2,6 +2,16 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import {
+  clearStoredUserLlm,
+  readStoredUserLlm,
+  writeStoredUserLlm,
+} from "@/lib/client-user-key";
+import {
+  BYOK_OPTIONAL,
+  BYOK_REQUIRED,
+  showByokFields,
+} from "@/lib/public-config";
 import type { Grade, SetupInput } from "@/lib/types";
 
 const GRADES: Grade[] = ["K", "1", "2", "3", "4", "5"];
@@ -13,6 +23,12 @@ const SUBJECTS = [
   { id: "Social Studies", emoji: "🌍", label: "Social Studies" },
   { id: "Art", emoji: "🎨", label: "Art" },
   { id: "Health", emoji: "❤️", label: "Health" },
+] as const;
+
+const LLM_PROVIDERS = [
+  { id: "openai", label: "OpenAI" },
+  { id: "anthropic", label: "Anthropic (Claude)" },
+  { id: "google", label: "Google (Gemini)" },
 ] as const;
 
 type Props = {
@@ -28,6 +44,11 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
   const [topic, setTopic] = useState("");
   const [questionCount, setQuestionCount] = useState(10);
 
+  const [llmProvider, setLlmProvider] = useState<string>("openai");
+  const [llmApiKey, setLlmApiKey] = useState("");
+  const [useOwnKey, setUseOwnKey] = useState(false);
+  const [byokError, setByokError] = useState<string | null>(null);
+
   useEffect(() => {
     if (!defaultSetup) return;
     setGrade(defaultSetup.grade);
@@ -36,9 +57,36 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
     setQuestionCount(defaultSetup.questionCount);
   }, [defaultSetup]);
 
+  useEffect(() => {
+    if (!showByokFields()) return;
+    const s = readStoredUserLlm();
+    if (s) {
+      setLlmProvider(s.provider);
+      setLlmApiKey(s.apiKey);
+      if (BYOK_OPTIONAL && !BYOK_REQUIRED) setUseOwnKey(true);
+    }
+  }, []);
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!topic.trim()) return;
+    setByokError(null);
+
+    const needsKey =
+      BYOK_REQUIRED || (BYOK_OPTIONAL && useOwnKey);
+    if (needsKey) {
+      if (!llmApiKey.trim()) {
+        setByokError("Please paste your API key to continue.");
+        return;
+      }
+      writeStoredUserLlm({
+        provider: llmProvider,
+        apiKey: llmApiKey.trim(),
+      });
+    } else if (BYOK_OPTIONAL && !useOwnKey) {
+      clearStoredUserLlm();
+    }
+
     onSubmit({
       grade,
       subject,
@@ -71,6 +119,80 @@ export function SetupForm({ onSubmit, errorMessage, defaultSetup }: Props) {
         >
           {errorMessage}
         </div>
+      )}
+
+      {showByokFields() && (
+        <fieldset className="space-y-4 rounded-3xl border-4 border-kid-purple/30 bg-white/80 p-5 shadow-inner">
+          <legend className="px-2 text-lg font-bold text-kid-purple">
+            {BYOK_REQUIRED
+              ? "Your API key (not stored on our servers)"
+              : "Optional: your API key"}
+          </legend>
+          {BYOK_OPTIONAL && !BYOK_REQUIRED && (
+            <label className="flex cursor-pointer items-center gap-3 text-kid-ink">
+              <input
+                type="checkbox"
+                checked={useOwnKey}
+                onChange={(e) => setUseOwnKey(e.target.checked)}
+                className="h-5 w-5 accent-kid-purple"
+              />
+              <span>Use my own API key instead of the site default</span>
+            </label>
+          )}
+          {(BYOK_REQUIRED || useOwnKey) && (
+            <>
+              <p className="text-sm text-kid-ink/75">
+                Your key stays in this browser tab (session storage) and is sent
+                to the AI provider <strong>through</strong> this app&apos;s
+                server for each lesson. It is not saved to a database. Read{" "}
+                <code className="rounded bg-kid-ink/10 px-1">SECURITY.md</code> in
+                the repo for what that means for trust.
+              </p>
+              <div>
+                <label
+                  htmlFor="llm-provider"
+                  className="mb-2 block font-semibold text-kid-ink"
+                >
+                  Provider
+                </label>
+                <select
+                  id="llm-provider"
+                  value={llmProvider}
+                  onChange={(e) => setLlmProvider(e.target.value)}
+                  className="w-full rounded-2xl border-4 border-kid-peach bg-white px-4 py-3 text-lg text-kid-ink"
+                >
+                  {LLM_PROVIDERS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="llm-api-key"
+                  className="mb-2 block font-semibold text-kid-ink"
+                >
+                  API key
+                </label>
+                <input
+                  id="llm-api-key"
+                  type="password"
+                  autoComplete="off"
+                  value={llmApiKey}
+                  onChange={(e) => setLlmApiKey(e.target.value)}
+                  placeholder="sk-… or your provider secret"
+                  className="w-full rounded-2xl border-4 border-kid-peach bg-white px-4 py-3 font-mono text-sm text-kid-ink placeholder:text-kid-ink/35 focus:border-kid-purple focus:outline-none"
+                />
+              </div>
+              {byokError && (
+                <p className="text-sm font-medium text-red-700" role="alert">
+                  {byokError}
+                </p>
+              )}
+            </>
+          )}
+        </fieldset>
       )}
 
       <fieldset className="space-y-3">

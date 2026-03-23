@@ -1,6 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { clearStoredUserLlm } from "@/lib/client-user-key";
+import { showByokFields } from "@/lib/public-config";
 import { LoadingAnimation } from "@/components/LoadingAnimation";
 import { Quiz } from "@/components/Quiz";
 import { ReadyPrompt } from "@/components/ReadyPrompt";
@@ -15,13 +17,27 @@ export default function Home() {
   return (
     <main className="min-h-dvh pb-12">
       <header className="sticky top-0 z-10 border-b border-white/40 bg-white/30 px-4 py-3 backdrop-blur-md">
-        <div className="mx-auto flex max-w-2xl items-center justify-between">
+        <div className="mx-auto flex max-w-2xl items-center justify-between gap-2">
           <span className="font-display text-xl font-bold text-kid-purple">
             Kids Study Lab
           </span>
-          <span className="text-2xl" aria-hidden>
-            🚀
-          </span>
+          <div className="flex items-center gap-2">
+            {showByokFields() && (
+              <button
+                type="button"
+                onClick={() => {
+                  clearStoredUserLlm();
+                  window.location.reload();
+                }}
+                className="rounded-xl border-2 border-kid-purple/40 bg-white/80 px-3 py-2 text-xs font-semibold text-kid-purple"
+              >
+                Clear API key
+              </button>
+            )}
+            <span className="text-2xl" aria-hidden>
+              🚀
+            </span>
+          </div>
         </div>
       </header>
 

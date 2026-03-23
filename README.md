@@ -4,6 +4,18 @@ A **kid-friendly web app** (grades K–5): choose a topic, read short AI-made st
 
 **Fork this repo** to run it on your machine or in the cloud—see [Choose how to run it](#choose-how-to-run-it) below.
 
+### Deploy on Vercel (each visitor uses their own key)
+
+LLM providers don’t offer a standard “OAuth for strangers’ API usage” on your site. For a **public playground** where **you don’t pay for everyone’s tokens**, use **Bring Your Own Key (BYOK)**:
+
+1. Deploy this repo to [Vercel](https://vercel.com/) (import from GitHub).
+2. In **Project → Settings → Environment Variables**, set:
+   - `REQUIRE_USER_LLM_KEYS` = `true`
+   - `NEXT_PUBLIC_REQUIRE_USER_LLM_KEYS` = `true`
+3. **Do not** set `LLM_API_KEY` in Vercel (leave it empty so the server never uses a shared secret).
+4. Redeploy. Visitors paste a key in the form; it stays in **session storage** and is only sent **per request** through your server to the provider—not stored in a database.  
+   **Trust model:** users must trust your deployed code + Vercel + the provider; see **[SECURITY.md](./SECURITY.md)** (OAuth vs keys, what “no storage” means, optional hybrid env).
+
 ---
 
 ## Choose how to run it

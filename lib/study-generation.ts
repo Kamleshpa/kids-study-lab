@@ -1,4 +1,5 @@
 import { generateObject } from "ai";
+import type { LanguageModel } from "ai";
 import { z } from "zod";
 import { getLanguageModel, getVerifierLanguageModel } from "@/lib/llm";
 import {
@@ -83,10 +84,11 @@ function formatVerifierFeedback(v: z.infer<typeof verifierSchema>): string {
 }
 
 export async function generateStudyWithVerifier(
-  input: SetupInput
+  input: SetupInput,
+  models?: { generator: LanguageModel; verifier: LanguageModel }
 ): Promise<{ data: GenerateResponse; verification: VerificationMeta }> {
-  const generator = getLanguageModel();
-  const verifier = getVerifierLanguageModel();
+  const generator = models?.generator ?? getLanguageModel();
+  const verifier = models?.verifier ?? getVerifierLanguageModel();
   const schema = buildGenerationSchema(input.questionCount);
 
   let lastData: GenerateResponse | null = null;

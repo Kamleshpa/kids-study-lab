@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { byokHeaders, readStoredUserLlm } from "@/lib/client-user-key";
+import { BYOK_REQUIRED } from "@/lib/public-config";
 import type { SetupInput } from "@/lib/types";
 import { useStudy } from "@/context/StudyContext";
 
@@ -33,9 +35,22 @@ export function LoadingAnimation({ setup }: Props) {
     let cancelled = false;
     (async () => {
       try {
+        const stored = readStoredUserLlm();
+        if (BYOK_REQUIRED && !stored) {
+          loadError(
+            "Add your API key on the home page (session expired or missing)."
+          );
+          return;
+        }
+
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          ...(stored ? byokHeaders(stored) : {}),
+        };
+
         const res = await fetch("/api/generate", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify(setup),
         });
         const data = await res.json();
