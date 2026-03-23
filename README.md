@@ -136,7 +136,41 @@ Put the key in **`.env.local`** as `LLM_API_KEY=...` and set `LLM_PROVIDER` to `
 
 **Cost:** Many providers have free or low-cost trial credit; generation uses tokens per lesson—see their pricing pages.
 
-**Verifier:** By default the verifier can use the **same** API key with a stronger model. Optional: set `VERIFIER_LLM_API_KEY` etc. in `.env.local` (see [`.env.example`](./.env.example)).
+---
+
+## Verifier LLM (optional second model)
+
+After each lesson draft, a **verifier** model runs a second pass: it checks facts, that quiz **correct answers** match the choices, and basic **kid-safety** guardrails. If it isn’t happy, the app can **regenerate** the lesson (up to **2** extra attempts).
+
+**You don’t have to configure anything extra** if you’re happy with the defaults: the verifier uses your **same** `LLM_API_KEY` (and usually the same provider) but a **stronger default model** than the author—for example, **GPT‑4o** as verifier while the author uses **GPT‑4o mini**.
+
+### Example: same provider, explicit models (OpenAI)
+
+```env
+LLM_PROVIDER=openai
+LLM_API_KEY=sk-...your-key...
+LLM_MODEL=gpt-4o-mini
+
+VERIFIER_LLM_PROVIDER=openai
+VERIFIER_LLM_API_KEY=sk-...your-key...
+VERIFIER_LLM_MODEL=gpt-4o
+```
+
+(You can use one key for both lines; split keys are only needed if you use different accounts.)
+
+### Example: generator on OpenAI, verifier on Anthropic
+
+```env
+LLM_PROVIDER=openai
+LLM_API_KEY=sk-...openai...
+
+VERIFIER_LLM_PROVIDER=anthropic
+VERIFIER_LLM_API_KEY=sk-ant-api03-...anthropic...
+# Optional; defaults to a capable Claude model if omitted:
+# VERIFIER_LLM_MODEL=claude-3-5-sonnet-20241022
+```
+
+More options: [`.env.example`](./.env.example).
 
 ---
 
@@ -146,8 +180,10 @@ Put the key in **`.env.local`** as `LLM_API_KEY=...` and set `LLM_PROVIDER` to `
 |----------|-----------|---------|
 | `LLM_PROVIDER` | Yes | `openai`, `anthropic`, or `google` |
 | `LLM_API_KEY` | Yes | Secret key from that provider |
-| `LLM_MODEL` | No | Override model ID |
-| `VERIFIER_*` | No | Separate verifier provider/key/model |
+| `LLM_MODEL` | No | Override author model ID |
+| `VERIFIER_LLM_PROVIDER` | No | Verifier provider (defaults to same as `LLM_PROVIDER`) |
+| `VERIFIER_LLM_API_KEY` | No | Verifier key (defaults to `LLM_API_KEY`) |
+| `VERIFIER_LLM_MODEL` | No | Verifier model ID (defaults to a stronger model per provider) |
 
 Details: [`.env.example`](./.env.example).
 
